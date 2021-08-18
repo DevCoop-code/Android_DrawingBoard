@@ -3,6 +3,7 @@ package com.hankyo.jeong.drawingboard;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -11,6 +12,8 @@ import com.hankyo.jeong.drawingboard.databinding.ActivityMainBinding;
 import com.hankyo.jeong.drawingboard.views.PaintingView;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "MainActivity";
 
     private ActivityMainBinding binding;
 
@@ -44,5 +47,14 @@ public class MainActivity extends AppCompatActivity {
             paintingView.setTool(tool);
             currTool = (ImageButton) view;
         }
+    }
+
+    public void getPhotoData(View view) {
+
+    }
+
+    public void undoDrawing(View view) {
+        Log.d(TAG, "undo Drawing");
+        paintingView.undoDrawing();
     }
 }
