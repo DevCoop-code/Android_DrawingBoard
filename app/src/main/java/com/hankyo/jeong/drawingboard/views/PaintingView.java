@@ -21,7 +21,8 @@ public class PaintingView extends View {
 
     private static final String TAG = "PaintingView";
 
-    ArrayList<Bitmap> canvasBitmapList = new ArrayList<Bitmap>();
+    private ArrayList<Bitmap> canvasBitmapList = new ArrayList<Bitmap>();
+    private int canvasBitmapCount = 0;
 
     private Paint paint = new Paint();
     private Path path  = new Path();
@@ -51,6 +52,8 @@ public class PaintingView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
 
         canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Bitmap intermediateMap = canvasBitmap.copy(canvasBitmap.getConfig(), true);
+        canvasBitmapList.add(canvasBitmapCount, intermediateMap);
         drawCanvas = new Canvas(canvasBitmap);
         canvasPaint = new Paint(Paint.DITHER_FLAG);
     }
@@ -98,8 +101,18 @@ public class PaintingView extends View {
                 drawCanvas.drawPath(path, paint);
                 path.reset();
 
-                Bitmap intermediateMap = canvasBitmap.copy(canvasBitmap.getConfig(), true);
-                canvasBitmapList.add(intermediateMap);
+                canvasBitmapCount++;
+                if (canvasBitmapCount > 0) {
+                    Bitmap intermediateMap = canvasBitmap.copy(canvasBitmap.getConfig(), true);
+                    if (canvasBitmapCount < canvasBitmapList.size()) {
+                        Log.d(TAG, "bitmap SET count: " + canvasBitmapCount);
+                        canvasBitmapList.set(canvasBitmapCount, intermediateMap);
+                    }
+                    else {
+                        Log.d(TAG, "bitmap ADD count: " + canvasBitmapCount);
+                        canvasBitmapList.add(intermediateMap);
+                    }
+                }
                 break;
             default:
                 return false;
@@ -111,15 +124,13 @@ public class PaintingView extends View {
 
     private void drawRectangle() {
         path.reset();
-        if (recPivotX - recMoveX < 0)
-        {
+        if (recPivotX - recMoveX < 0) {
             if (recPivotY - recMoveY < 0)
                 path.addRect(recPivotX, recPivotY, recMoveX, recMoveY, Path.Direction.CW);
             else
                 path.addRect(recPivotX, recMoveY, recMoveX, recPivotY, Path.Direction.CW);
         }
-        else
-        {
+        else {
             if (recPivotY - recMoveY < 0)
                 path.addRect(recMoveX, recPivotY, recPivotX, recMoveY, Path.Direction.CW);
             else
@@ -145,13 +156,15 @@ public class PaintingView extends View {
     }
 
     public void undoDrawing() {
-//        Path pastPath = pathList.get(pathList.size() - 2);
-//        path = pastPath;
-//        drawCanvas.drawPath(path, paint);
-
-        canvasBitmap = canvasBitmapList.get(canvasBitmapList.size() - 2);
-//        drawCanvas = new Canvas(canvasBitmap);
-
-        invalidate();
+        canvasBitmapCount--;
+        if (canvasBitmapCount >= 0) {
+            Log.d(TAG, "bitmap GET count: " + canvasBitmapCount);
+            canvasBitmap = canvasBitmapList.get(canvasBitmapCount).copy(canvasBitmap.getConfig(), true);
+            drawCanvas = new Canvas(canvasBitmap);
+            invalidate();
+        }
+        else {
+            canvasBitmapCount = 0;
+        }
     }
 }
