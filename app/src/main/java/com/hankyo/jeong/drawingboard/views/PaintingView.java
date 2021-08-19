@@ -21,7 +21,7 @@ public class PaintingView extends View {
 
     private static final String TAG = "PaintingView";
 
-    ArrayList<Path> pathList = new ArrayList<Path>();
+    ArrayList<Bitmap> canvasBitmapList = new ArrayList<Bitmap>();
 
     private Paint paint = new Paint();
     private Path path  = new Path();
@@ -98,6 +98,8 @@ public class PaintingView extends View {
                 drawCanvas.drawPath(path, paint);
                 path.reset();
 
+                Bitmap intermediateMap = canvasBitmap.copy(canvasBitmap.getConfig(), true);
+                canvasBitmapList.add(intermediateMap);
                 break;
             default:
                 return false;
@@ -143,9 +145,12 @@ public class PaintingView extends View {
     }
 
     public void undoDrawing() {
-        Path pastPath = pathList.get(pathList.size() - 2);
-        path = pastPath;
-        drawCanvas.drawPath(path, paint);
+//        Path pastPath = pathList.get(pathList.size() - 2);
+//        path = pastPath;
+//        drawCanvas.drawPath(path, paint);
+
+        canvasBitmap = canvasBitmapList.get(canvasBitmapList.size() - 2);
+//        drawCanvas = new Canvas(canvasBitmap);
 
         invalidate();
     }
