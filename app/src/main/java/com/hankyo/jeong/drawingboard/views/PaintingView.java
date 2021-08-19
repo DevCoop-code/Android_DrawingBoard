@@ -167,4 +167,17 @@ public class PaintingView extends View {
             canvasBitmapCount = 0;
         }
     }
+
+    public void redoDrawing() {
+        canvasBitmapCount++;
+        if (canvasBitmapCount < canvasBitmapList.size()) {
+            Log.d(TAG, "bitmap GET count: " + canvasBitmapCount);
+            canvasBitmap = canvasBitmapList.get(canvasBitmapCount).copy(canvasBitmap.getConfig(), true);
+            drawCanvas = new Canvas(canvasBitmap);
+            invalidate();
+        }
+        else {
+            canvasBitmapCount = canvasBitmapList.size() - 1;
+        }
+    }
 }

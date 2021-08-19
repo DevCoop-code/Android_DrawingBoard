@@ -57,4 +57,9 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "undo Drawing");
         paintingView.undoDrawing();
     }
+
+    public void redoDrawing(View view) {
+        Log.d(TAG, "redo Drawing");
+        paintingView.redoDrawing();
+    }
 }
