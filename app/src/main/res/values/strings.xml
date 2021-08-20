@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">DrawingBoard</string>
+
+    <!-- Dialog -->
+    <string name="permissionTitleMsg">Permission</string>
+    <string name="permissionYesMsg">YES</string>
+    <string name="permissionNoMsg">NO</string>
+    <string name="permissionWarningMsg">You should allow the External Storage</string>
+    <string name="permissionNeedMsg">We need External Storage Permission for Executing</string>
 </resources>

@@ -18,20 +18,20 @@
             android:orientation="horizontal">
             <ImageButton
                 android:layout_margin="5dp"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:background="@android:drawable/ic_menu_camera"
                 android:onClick="getPhotoData"/>
             <ImageButton
                 android:layout_margin="5dp"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:background="@drawable/undo_arrow"
                 android:onClick="undoDrawing"/>
             <ImageButton
                 android:layout_margin="5dp"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:background="@drawable/redo_arrow"
                 android:onClick="redoDrawing"/>
         </LinearLayout>
