@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">그림판</string>
+
+    <!-- Dialog -->
+    <string name="permissionTitleMsg">필수허가 요청</string>
+    <string name="permissionYesMsg">수락</string>
+    <string name="permissionNoMsg">거절</string>
+    <string name="permissionWarningMsg">외부 스토리지 권한 허가가 있어야 합니다</string>
+    <string name="permissionNeedMsg">실행을 위해 외부스토리지 권한 허가가 필요합니다</string>
+</resources>

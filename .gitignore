@@ -11,6 +11,11 @@
 bin/
 gen/
 
+app/build/generated/
+app/build/intermediates/
+app/build/outputs/
+app/build/tmp/
+
 *.iml
 .gradle
 /local.properties
