@@ -53,6 +53,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     // ImagePhoto Move Value
     float oldXvalue, oldYvalue;
+    float targetX = 0, targetY = 0;
+    float drawX = 0, drawY = 0;
+    View targetImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +89,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         public boolean onTouch(View view, MotionEvent motionEvent) {
 //                            int width = ((ViewGroup)view.getParent()).getWidth() - view.getWidth();
 //                            int height = ((ViewGroup)view.getParent()).getHeight() - view.getHeight();
-                            float targetX = 0, targetY = 0;
-                            View targetImageView = view.findViewById(R.id.targetImage);
+                            targetImageView = view.findViewById(R.id.targetImage);
                             int deltaX = (view.getWidth() - targetImageView.getWidth()) / 2;
                             int deltaY = (view.getHeight() - targetImageView.getHeight()) / 2;
 
@@ -104,6 +106,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 //                                    view.setY(motionEvent.getRawY() - (oldYvalue + view.getHeight()));
                                     targetX = motionEvent.getRawX() - deltaX - (targetImageView.getWidth() / 2);
                                     targetY = motionEvent.getRawY() - deltaY - (targetImageView.getHeight() / 2);
+
+                                    drawX = motionEvent.getRawX() - (targetImageView.getWidth() / 2);
+                                    drawY = motionEvent.getRawY() - (targetImageView.getHeight() / 2);
 
                                     view.setX(targetX);
                                     view.setY(targetY);
@@ -143,6 +148,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                             }
 
                             return true;
+                        }
+                    });
+//                    imageResizeView.okBtn.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            paintingView.drawPhotoImage(photoBitmap, targetX, targetY);
+//                        }
+//                    });
+
+                    imageResizeView.cancelBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Log.d(TAG, "Draw PaintView: " + drawX + ", " + drawY);
+                            paintingView.drawPhotoImage(photoBitmap, drawX, drawY, targetImageView.getWidth(), targetImageView.getHeight());
+
+                            imageResizeView.setVisibility(View.INVISIBLE);
                         }
                     });
                     binding.paintingArea.addView(imageResizeView);

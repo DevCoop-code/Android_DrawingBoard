@@ -17,5 +17,12 @@
             android:layout_above="@+id/targetImage"
             android:layout_toRightOf="@+id/targetImage"
             android:background="@drawable/image_cancel_btn"/>
+<!--        <ImageButton-->
+<!--            android:id="@+id/okBtn"-->
+<!--            android:layout_width="20dp"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:layout_above="@+id/targetImage"-->
+<!--            android:layout_toLeftOf="@+id/targetImage"-->
+<!--            android:background="@drawable/image_ok_btn"/>-->
 
 </RelativeLayout>

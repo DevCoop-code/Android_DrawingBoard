@@ -181,7 +181,22 @@ public class PaintingView extends View {
         }
     }
 
-    public void drawPhotoImage(Bitmap bitmap) {
-        drawCanvas.drawBitmap(bitmap, 0, 0, null);
+    public void drawPhotoImage(Bitmap bitmap, float left, float top, int w, int h) {
+        Bitmap rescaledBitmap = Bitmap.createScaledBitmap(bitmap, w, h, true);
+        drawCanvas.drawBitmap(rescaledBitmap, left, top, null);
+        invalidate();
+
+        canvasBitmapCount++;
+        if (canvasBitmapCount > 0) {
+            Bitmap intermediateMap = canvasBitmap.copy(canvasBitmap.getConfig(), true);
+            if (canvasBitmapCount < canvasBitmapList.size()) {
+                Log.d(TAG, "bitmap SET count: " + canvasBitmapCount);
+                canvasBitmapList.set(canvasBitmapCount, intermediateMap);
+            }
+            else {
+                Log.d(TAG, "bitmap ADD count: " + canvasBitmapCount);
+                canvasBitmapList.add(intermediateMap);
+            }
+        }
     }
 }

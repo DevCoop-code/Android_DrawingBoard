@@ -17,9 +17,9 @@ import com.hankyo.jeong.drawingboard.databinding.ImageResizeViewBinding;
 public class ImageResizeView extends RelativeLayout {
 
     RelativeLayout rootLayout;
-    ImageView targetImage;
-    ImageButton cancelBtn;
-
+    public ImageView targetImage;
+    public ImageButton cancelBtn;
+    public ImageButton okBtn;
     public ImageResizeView(Context context) {
         super(context);
 
@@ -49,6 +49,7 @@ public class ImageResizeView extends RelativeLayout {
         rootLayout = (RelativeLayout) findViewById(R.id.imageResizeViewLayout);
         targetImage = (ImageView) findViewById(R.id.targetImage);
         cancelBtn = (ImageButton) findViewById(R.id.cancelBtn);
+//        okBtn = (ImageButton) findViewById(R.id.okBtn);
     }
 
     public void setTargetImage(Bitmap targetBitmap) {
