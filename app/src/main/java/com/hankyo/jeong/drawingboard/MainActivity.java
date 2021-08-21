@@ -23,7 +23,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -48,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private ImageButton currTool;
 
     ActivityResultLauncher<Intent> requestActivity;
+
+    // ImagePhoto Move Value
+    float oldXvalue, oldYvalue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +81,70 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                      */
                     ImageResizeView imageResizeView = new ImageResizeView(getApplicationContext());
                     imageResizeView.setTargetImage(photoBitmap);
-                    // Set View IDs
-                    imageResizeView.setId(0);
+                    imageResizeView.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+//                            int width = ((ViewGroup)view.getParent()).getWidth() - view.getWidth();
+//                            int height = ((ViewGroup)view.getParent()).getHeight() - view.getHeight();
+                            float targetX = 0, targetY = 0;
+                            View targetImageView = view.findViewById(R.id.targetImage);
+                            int deltaX = (view.getWidth() - targetImageView.getWidth()) / 2;
+                            int deltaY = (view.getHeight() - targetImageView.getHeight()) / 2;
 
+                            switch (motionEvent.getAction()) {
+                                case MotionEvent.ACTION_DOWN:
+                                    oldXvalue = motionEvent.getX();
+                                    oldYvalue = motionEvent.getY();
+
+                                    Log.d(TAG, "old Value X: " + oldXvalue + ", Y: " + oldYvalue);
+                                    break;
+
+                                case MotionEvent.ACTION_MOVE:
+//                                    view.setX(motionEvent.getRawX() - oldXvalue);
+//                                    view.setY(motionEvent.getRawY() - (oldYvalue + view.getHeight()));
+                                    targetX = motionEvent.getRawX() - deltaX - (targetImageView.getWidth() / 2);
+                                    targetY = motionEvent.getRawY() - deltaY - (targetImageView.getHeight() / 2);
+
+                                    view.setX(targetX);
+                                    view.setY(targetY);
+                                    break;
+
+                                case MotionEvent.ACTION_UP:
+//                                    if (view.getX() > width && view.getY() > height) {
+//                                        view.setX(width);
+//                                        view.setY(height);
+//                                    } else if (view.getX() < 0 && view.getY() > height) {
+//                                        view.setX(0);
+//                                        view.setY(height);
+//                                    } else if (view.getX() > width && view.getY() < 0) {
+//                                        view.setX(width);
+//                                        view.setY(0);
+//                                    } else if (view.getX() < 0 && view.getY() < 0) {
+//                                        view.setX(0);
+//                                        view.setY(0);
+//                                    } else if (view.getX() < 0 || view.getX() > width) {
+//                                        if (view.getX() < 0) {
+//                                            view.setX(0);
+//                                            view.setY(motionEvent.getRawY() - oldYvalue - view.getHeight());
+//                                        } else {
+//                                            view.setX(width);
+//                                            view.setY(motionEvent.getRawY() - oldYvalue - view.getHeight());
+//                                        }
+//                                    } else if (view.getY() < 0 || view.getY() > height) {
+//                                        if (view.getY() < 0) {
+//                                            view.setX(motionEvent.getRawX() - oldXvalue);
+//                                            view.setY(0);
+//                                        } else {
+//                                            view.setX(motionEvent.getRawX() - oldXvalue);
+//                                            view.setY(height);
+//                                        }
+//                                    }
+                                    break;
+                            }
+
+                            return true;
+                        }
+                    });
                     binding.paintingArea.addView(imageResizeView);
                 }
             }
