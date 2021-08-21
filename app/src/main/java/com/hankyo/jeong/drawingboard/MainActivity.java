@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inSampleSize = 4;
                     Bitmap photoBitmap = BitmapFactory.decodeFile(phototImgPath, options);
+
+                    paintingView.drawPhotoImage(photoBitmap);
                 }
             }
         });
@@ -121,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         Utils.showDialogForPermission(this, alertTitleMsg, alertYesMsg, alertNoMsg, alertNeedMsg, callback);
 
                     } else {                                        // Accepted
-
+                        getPhotoData();
                     }
                 }
                 break;
@@ -170,10 +172,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             if (!hasPermissions(PERMISSIONS)) {                     // Permission Not Granted
                 requestPermissions(PERMISSIONS, PERMISSIONS_REQUEST_CODE);
             } else {                                                // Permission Already Granted
-
+                getPhotoData();
             }
         } else {                                                    // Permission Not Necessary
-
+            getPhotoData();
         }
     }
 

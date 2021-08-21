@@ -180,4 +180,8 @@ public class PaintingView extends View {
             canvasBitmapCount = canvasBitmapList.size() - 1;
         }
     }
+
+    public void drawPhotoImage(Bitmap bitmap) {
+        drawCanvas.drawBitmap(bitmap, 0, 0, null);
+    }
 }
