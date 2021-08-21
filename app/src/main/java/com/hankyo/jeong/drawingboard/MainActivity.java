@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.hankyo.jeong.drawingboard.databinding.ActivityMainBinding;
 import com.hankyo.jeong.drawingboard.utils.DialogCallback;
 import com.hankyo.jeong.drawingboard.utils.Utils;
+import com.hankyo.jeong.drawingboard.views.ImageResizeView;
 import com.hankyo.jeong.drawingboard.views.PaintingView;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
@@ -69,7 +70,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     options.inSampleSize = 4;
                     Bitmap photoBitmap = BitmapFactory.decodeFile(phototImgPath, options);
 
-                    paintingView.drawPhotoImage(photoBitmap);
+//                    paintingView.drawPhotoImage(photoBitmap);
+                    /*
+                     Make ImageResizeView Dynamically
+                     */
+                    ImageResizeView imageResizeView = new ImageResizeView(getApplicationContext());
+                    imageResizeView.setTargetImage(photoBitmap);
+                    // Set View IDs
+                    imageResizeView.setId(0);
+
+                    binding.paintingArea.addView(imageResizeView);
                 }
             }
         });
