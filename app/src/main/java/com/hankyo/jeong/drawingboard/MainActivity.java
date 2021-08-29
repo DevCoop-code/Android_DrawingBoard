@@ -9,6 +9,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -34,7 +36,11 @@ import com.hankyo.jeong.drawingboard.databinding.ActivityMainBinding;
 import com.hankyo.jeong.drawingboard.utils.DialogCallback;
 import com.hankyo.jeong.drawingboard.utils.Utils;
 import com.hankyo.jeong.drawingboard.views.ImageResizeView;
+import com.hankyo.jeong.drawingboard.views.PaintingToolElementAdapter;
+import com.hankyo.jeong.drawingboard.views.PaintingToolListDecoration;
 import com.hankyo.jeong.drawingboard.views.PaintingView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -57,12 +63,35 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     float drawX = 0, drawY = 0;
     View targetImageView;
 
+    private RecyclerView listview;
+    private PaintingToolElementAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Set RecyclerView
+        listview = binding.mainListview;
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        listview.setLayoutManager(layoutManager);
+        ArrayList<String> itemList = new ArrayList<>();
+        itemList.add("0");
+        itemList.add("1");
+        itemList.add("2");
+        itemList.add("3");
+        itemList.add("4");
+        itemList.add("5");
+        itemList.add("6");
+        itemList.add("7");
+        itemList.add("8");
+        adapter = new PaintingToolElementAdapter(this, itemList, null);
+        listview.setAdapter(adapter);
+
+        PaintingToolListDecoration decoration = new PaintingToolListDecoration();
+        listview.addItemDecoration(decoration);
 
         paintingView = binding.paintView;
         LinearLayout colorPalletteLayout = binding.colorPallette;

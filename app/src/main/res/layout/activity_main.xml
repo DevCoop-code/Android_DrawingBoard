@@ -134,8 +134,13 @@
                     android:onClick="changeColor"
                     android:tag="#FFFFFFFF"/>
             </LinearLayout>
-
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/main_listview"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scrollbars="horizontal"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
