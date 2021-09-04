@@ -37,7 +37,8 @@
                 android:layout_height="50dp"
                 android:background="@drawable/icons_save"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginBottom="10dp"
+                android:onClick="saveImage"/>
         </LinearLayout>
 
         <!-- Layout PaintingBoard & Tools -->

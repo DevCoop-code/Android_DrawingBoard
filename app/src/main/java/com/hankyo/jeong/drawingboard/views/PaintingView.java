@@ -1,5 +1,7 @@
 package com.hankyo.jeong.drawingboard.views;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -8,12 +10,24 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import androidx.annotation.Nullable;
 
@@ -22,6 +36,9 @@ public class PaintingView extends View {
     enum DrawMode {DRAW_LINE, DRAW_RECTANGLE, DRAW_ERASE};
 
     private static final String TAG = "PaintingView";
+    private static final String IMAGES_FOLDER_NAME = "DrawingBoardM";
+
+    private Context mContext;
 
     private ArrayList<Bitmap> canvasBitmapList = new ArrayList<Bitmap>();
     private int canvasBitmapCount = 0;
@@ -44,6 +61,8 @@ public class PaintingView extends View {
 
     public PaintingView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+
+        mContext = context;
 
         paint.setAntiAlias(true);
         paint.setStrokeWidth(10f);
@@ -222,6 +241,44 @@ public class PaintingView extends View {
     public void setEraser() {
         if (clear != null) {
             paint.setXfermode(clear);
+        }
+    }
+
+    public void saveBitmapImage() {
+        OutputStream fos;
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                ContentResolver resolver = mContext.getContentResolver();
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()));
+                contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/png");
+                contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/" + IMAGES_FOLDER_NAME);
+
+                Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                fos = resolver.openOutputStream(imageUri);
+            } else {
+                String imagesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + File.separator + IMAGES_FOLDER_NAME;
+
+                File file = new File(imagesDir);
+
+                if (!file.exists()) {
+                    file.mkdir();
+                }
+
+                File image = new File(imagesDir, new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png");
+                fos = new FileOutputStream(image);
+            }
+
+            canvasBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.flush();
+            fos.close();
+
+            Toast.makeText(mContext, "Saved the Image File to Gallery", Toast.LENGTH_LONG).show();
+        } catch (FileNotFoundException fnfe) {
+            fnfe.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
     }
 }

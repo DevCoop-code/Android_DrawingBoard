@@ -301,4 +301,8 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
         Log.d(TAG, "redo Drawing");
         paintingView.redoDrawing();
     }
+
+    public void saveImage(View view) {
+        paintingView.saveBitmapImage();
+    }
 }
