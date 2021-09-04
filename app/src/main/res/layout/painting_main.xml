@@ -81,7 +81,8 @@
                     android:background="@drawable/icons_eraser"
                     android:padding="10dp"
                     android:layout_marginRight="10dp"
-                    android:onClick="changeTool"/>
+                    android:onClick="changeTool"
+                    android:tag="eraser"/>
                 <ImageButton
                     android:id="@+id/rectangleTool_btn"
                     android:layout_width="50dp"

@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -17,7 +19,7 @@ import androidx.annotation.Nullable;
 
 public class PaintingView extends View {
 
-    enum DrawMode {DRAW_LINE, DRAW_RECTANGLE};
+    enum DrawMode {DRAW_LINE, DRAW_RECTANGLE, DRAW_ERASE};
 
     private static final String TAG = "PaintingView";
 
@@ -37,6 +39,8 @@ public class PaintingView extends View {
 
     private float recPivotX, recPivotY, recMoveX, recMoveY = 0;
 
+    private PorterDuffXfermode clear;
+
     public PaintingView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
@@ -45,6 +49,8 @@ public class PaintingView extends View {
         paint.setColor(paintColor);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
+
+        clear = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
     }
 
     @Override
@@ -80,7 +86,7 @@ public class PaintingView extends View {
                 recPivotY = touchY;
 
                 // Draw Line Mode
-                if (drawMode == DrawMode.DRAW_LINE) {
+                if (drawMode == DrawMode.DRAW_LINE || drawMode == DrawMode.DRAW_ERASE) {
                     path.moveTo(recPivotX, recPivotY);
                 }
 
@@ -90,7 +96,7 @@ public class PaintingView extends View {
                 recMoveY = touchY;
 
                 // Draw Line Mode
-                if (drawMode == DrawMode.DRAW_LINE) {
+                if (drawMode == DrawMode.DRAW_LINE || drawMode == DrawMode.DRAW_ERASE) {
                     path.lineTo(recMoveX, recMoveY);
                 }
                 else if (drawMode == DrawMode.DRAW_RECTANGLE) {
@@ -152,6 +158,9 @@ public class PaintingView extends View {
             drawMode = DrawMode.DRAW_LINE;
         } else if (newTool.equals("rectangle")) {
             drawMode = DrawMode.DRAW_RECTANGLE;
+        } else if (newTool.equals("eraser")) {
+            drawMode = DrawMode.DRAW_ERASE;
+            setEraser();
         }
     }
 
@@ -198,5 +207,10 @@ public class PaintingView extends View {
                 canvasBitmapList.add(intermediateMap);
             }
         }
+    }
+
+    public void setEraser() {
+        if (clear != null)
+            paint.setXfermode(clear);
     }
 }
