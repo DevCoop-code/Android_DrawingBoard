@@ -43,8 +43,12 @@ import androidx.recyclerview.widget.RecyclerView;
 public class PaintActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String TAG = "PaintActivity";
 
+    enum ExternalStorageMode {NONE, READ, WRITE};
+
     private static final int PERMISSIONS_REQUEST_CODE = 1000;
-    String[] PERMISSIONS = {"android.permission.READ_EXTERNAL_STORAGE"};
+    String[] PERMISSIONS = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
+
+    private ExternalStorageMode externalStoreMode = ExternalStorageMode.NONE;
 
     private PaintingMainBinding binding;
 
@@ -175,7 +179,14 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
 
                         Utils.showDialogForPermission(this, alertTitleMsg, alertYesMsg, alertNoMsg, alertNeedMsg, callback);
                     } else {        // Accepted
-                        getPhotoData();
+
+                        if (externalStoreMode == ExternalStorageMode.READ)
+                            getPhotoData();
+                        else if (externalStoreMode == ExternalStorageMode.WRITE)
+                            paintingView.saveBitmapImage();
+
+                        externalStoreMode = ExternalStorageMode.NONE;
+                        
                     }
                 }
                 break;
@@ -283,6 +294,7 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
     public void getPhotoData(View view) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!hasPermissions(PERMISSIONS)) {                     // Permission Not Granted
+                externalStoreMode = ExternalStorageMode.READ;
                 requestPermissions(PERMISSIONS, PERMISSIONS_REQUEST_CODE);
             } else {                                                // Permission Already Granted
                 getPhotoData();
@@ -303,6 +315,15 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
     }
 
     public void saveImage(View view) {
-        paintingView.saveBitmapImage();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!hasPermissions(PERMISSIONS)) {                     // Permission Not Granted
+                externalStoreMode = ExternalStorageMode.WRITE;
+                requestPermissions(PERMISSIONS, PERMISSIONS_REQUEST_CODE);
+            } else {                                                // Permission Already Granted
+                paintingView.saveBitmapImage();
+            }
+        } else {                                                    // Permission Not Necessary
+            paintingView.saveBitmapImage();
+        }
     }
 }
