@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -64,6 +65,8 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
     // RecyclerView For Color Component
     private RecyclerView listview;
     private PaintingToolElementAdapter adapter;
+
+    private ArrayList<String> colorItemList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,23 +196,16 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
         LinearLayoutManager layoutManager = new LinearLayoutManager(PaintActivity.this, LinearLayoutManager.VERTICAL, false);
         if (listview != null) {
             listview.setLayoutManager(layoutManager);
-            ArrayList<String> itemList = new ArrayList<>();
-            itemList.add("0");
-            itemList.add("1");
-            itemList.add("2");
-            itemList.add("3");
-            itemList.add("4");
-            itemList.add("5");
-            itemList.add("6");
-            itemList.add("7");
-            itemList.add("8");
-            itemList.add("9");
-            itemList.add("10");
-            itemList.add("11");
-            itemList.add("12");
-            itemList.add("13");
-            itemList.add("14");
-            adapter = new PaintingToolElementAdapter(PaintActivity.this, itemList, null);
+            colorItemList.add("#000000");
+            colorItemList.add("#FFFFFF");
+            colorItemList.add("#ED1C24");
+            adapter = new PaintingToolElementAdapter(PaintActivity.this, colorItemList, new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int index = ((ViewGroup)view.getParent()).indexOfChild(view);
+                    paintingView.setColor(colorItemList.get(index));
+                }
+            });
             listview.setAdapter(adapter);
 
             PaintingToolListDecoration decoration = new PaintingToolListDecoration();

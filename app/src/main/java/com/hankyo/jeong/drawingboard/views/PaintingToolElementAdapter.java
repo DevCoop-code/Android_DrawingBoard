@@ -1,6 +1,9 @@
 package com.hankyo.jeong.drawingboard.views;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class PaintingToolElementAdapter extends RecyclerView.Adapter<PaintingToolElementAdapter.ViewHolder> {
+    private static final String TAG = "PaintingToolElementAdapter";
+
     private ArrayList<String> itemList;
     private Context context;
     private View.OnClickListener onClickItem;
@@ -38,6 +43,9 @@ public class PaintingToolElementAdapter extends RecyclerView.Adapter<PaintingToo
 //        holder.textview.setText(item);
 //        holder.textview.setTag(item);
         holder.imgBtn.setOnClickListener(onClickItem);
+//        int color = Integer.parseInt(item, 16);
+//        color = 0xFF4CB8FB;
+        holder.imgBtn.setBackgroundColor(Color.parseColor(item));
     }
 
     @Override
