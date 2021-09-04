@@ -124,7 +124,7 @@ public class PaintingView extends View {
                     path.lineTo(recMoveX, recMoveY);
                     drawCanvas.drawPath(path, paint);
                     path.reset();
-                    path.moveTo(recPivotX, recPivotY);
+                    path.moveTo(recMoveX, recMoveY);
                 }
                 else if (drawMode == DrawMode.DRAW_RECTANGLE) {
                     drawRectangle();
@@ -134,18 +134,20 @@ public class PaintingView extends View {
                 drawCanvas.drawPath(path, paint);
                 path.reset();
 
+                // Save the Before Status for undo, redo
+                // -_-: Occure Out Of Memory
                 canvasBitmapCount++;
-                if (canvasBitmapCount > 0) {
-                    Bitmap intermediateMap = canvasBitmap.copy(canvasBitmap.getConfig(), true);
-                    if (canvasBitmapCount < canvasBitmapList.size()) {
-                        Log.d(TAG, "bitmap SET count: " + canvasBitmapCount);
-                        canvasBitmapList.set(canvasBitmapCount, intermediateMap);
-                    }
-                    else {
-                        Log.d(TAG, "bitmap ADD count: " + canvasBitmapCount);
-                        canvasBitmapList.add(intermediateMap);
-                    }
-                }
+//                if (canvasBitmapCount > 0) {
+//                    Bitmap intermediateMap = canvasBitmap.copy(canvasBitmap.getConfig(), true);
+//                    if (canvasBitmapCount < canvasBitmapList.size()) {
+//                        Log.d(TAG, "bitmap SET count: " + canvasBitmapCount);
+//                        canvasBitmapList.set(canvasBitmapCount, intermediateMap);
+//                    }
+//                    else {
+//                        Log.d(TAG, "bitmap ADD count: " + canvasBitmapCount);
+//                        canvasBitmapList.add(intermediateMap);
+//                    }
+//                }
                 break;
             default:
                 return false;
@@ -252,7 +254,7 @@ public class PaintingView extends View {
                 ContentResolver resolver = mContext.getContentResolver();
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()));
-                contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/png");
+                contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
                 contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/" + IMAGES_FOLDER_NAME);
 
                 Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
@@ -266,15 +268,17 @@ public class PaintingView extends View {
                     file.mkdir();
                 }
 
-                File image = new File(imagesDir, new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png");
+                File image = new File(imagesDir, new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".jpg");
                 fos = new FileOutputStream(image);
             }
 
-            canvasBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            if (canvasBitmap.compress(Bitmap.CompressFormat.JPEG, 40, fos)) {
+                Toast.makeText(mContext, "Saved the Image File to Gallery", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(mContext, "Fail to Save the Image File to Gallery", Toast.LENGTH_LONG).show();
+            }
             fos.flush();
             fos.close();
-
-            Toast.makeText(mContext, "Saved the Image File to Gallery", Toast.LENGTH_LONG).show();
         } catch (FileNotFoundException fnfe) {
             fnfe.printStackTrace();
         } catch (IOException ioe) {
