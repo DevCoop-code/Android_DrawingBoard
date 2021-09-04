@@ -46,6 +46,7 @@ public class PaintingToolElementAdapter extends RecyclerView.Adapter<PaintingToo
 //        int color = Integer.parseInt(item, 16);
 //        color = 0xFF4CB8FB;
         holder.imgBtn.setBackgroundColor(Color.parseColor(item));
+        holder.itemView.setTag(position);
     }
 
     @Override

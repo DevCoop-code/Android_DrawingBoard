@@ -196,13 +196,27 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
         LinearLayoutManager layoutManager = new LinearLayoutManager(PaintActivity.this, LinearLayoutManager.VERTICAL, false);
         if (listview != null) {
             listview.setLayoutManager(layoutManager);
-            colorItemList.add("#000000");
-            colorItemList.add("#FFFFFF");
-            colorItemList.add("#ED1C24");
+            colorItemList.add("#000000");       // Black
+            colorItemList.add("#FFFFFF");       // White
+            colorItemList.add("#ED1C24");       // Red
+            colorItemList.add("#F0F8FF");       // AliceBlue
+            colorItemList.add("#FAEBD7");       // AntiqueWhite
+            colorItemList.add("#00FFFF");       // Aqua
+            colorItemList.add("#7FFFD4");       // Aquamarine
+            colorItemList.add("#F0FFFF");       // Azure
+            colorItemList.add("#F5F5DC");       // Beige
+            colorItemList.add("#0000FF");       // Blue
+            colorItemList.add("#8A2BE2");       // BlueViolet
+            colorItemList.add("#A52A2a");       // Brown
+            colorItemList.add("#DEB887");       // BurlyWood
+            colorItemList.add("#FF7F50");       // Coral
+            colorItemList.add("#6495ED");       // CornflowerBlue
+            colorItemList.add("#FFF8DC");       // Cornsilk
             adapter = new PaintingToolElementAdapter(PaintActivity.this, colorItemList, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int index = ((ViewGroup)view.getParent()).indexOfChild(view);
+//                    int index = ((ViewGroup)view.getParent()).indexOfChild(view);
+                    int index = (int)view.getTag();
                     paintingView.setColor(colorItemList.get(index));
                 }
             });
