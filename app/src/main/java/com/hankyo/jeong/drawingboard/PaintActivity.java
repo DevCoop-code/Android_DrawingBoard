@@ -186,7 +186,7 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
                             paintingView.saveBitmapImage();
 
                         externalStoreMode = ExternalStorageMode.NONE;
-                        
+
                     }
                 }
                 break;

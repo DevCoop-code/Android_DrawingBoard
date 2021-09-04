@@ -82,6 +82,7 @@ public class PaintingView extends View {
         Bitmap intermediateMap = canvasBitmap.copy(canvasBitmap.getConfig(), true);
         canvasBitmapList.add(canvasBitmapCount, intermediateMap);
         drawCanvas = new Canvas(canvasBitmap);
+        drawCanvas.drawColor(Color.WHITE);
         canvasPaint = new Paint(Paint.DITHER_FLAG);
     }
 
@@ -185,10 +186,10 @@ public class PaintingView extends View {
 
         if (newTool.equals("line")) {
             drawMode = DrawMode.DRAW_LINE;
-            paint.setXfermode(null);
+            paint.setColor(paintColor);
         } else if (newTool.equals("rectangle")) {
             drawMode = DrawMode.DRAW_RECTANGLE;
-            paint.setXfermode(null);
+            paint.setColor(paintColor);
         } else if (newTool.equals("eraser")) {
             drawMode = DrawMode.DRAW_ERASE;
             setEraser();
@@ -242,13 +243,15 @@ public class PaintingView extends View {
 
     public void setEraser() {
         if (clear != null) {
-            paint.setXfermode(clear);
+            // When Save the Image it little bit complicated
+            // https://stackoverflow.com/questions/10494442/android-paint-porterduff-mode-clear/10495105
+//            paint.setXfermode(clear);
+            paint.setColor(Color.WHITE);
         }
     }
 
     public void saveBitmapImage() {
         OutputStream fos;
-
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 ContentResolver resolver = mContext.getContentResolver();
@@ -277,6 +280,7 @@ public class PaintingView extends View {
             } else {
                 Toast.makeText(mContext, "Fail to Save the Image File to Gallery", Toast.LENGTH_LONG).show();
             }
+
             fos.flush();
             fos.close();
         } catch (FileNotFoundException fnfe) {
