@@ -40,6 +40,7 @@ public class PaintingView extends View {
     private float recPivotX, recPivotY, recMoveX, recMoveY = 0;
 
     private PorterDuffXfermode clear;
+    private PorterDuffXfermode draw;
 
     public PaintingView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -51,6 +52,7 @@ public class PaintingView extends View {
         paint.setStrokeJoin(Paint.Join.ROUND);
 
         clear = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+        draw = new PorterDuffXfermode(PorterDuff.Mode.DST);
     }
 
     @Override
@@ -96,8 +98,14 @@ public class PaintingView extends View {
                 recMoveY = touchY;
 
                 // Draw Line Mode
-                if (drawMode == DrawMode.DRAW_LINE || drawMode == DrawMode.DRAW_ERASE) {
+                if (drawMode == DrawMode.DRAW_LINE) {
                     path.lineTo(recMoveX, recMoveY);
+                }
+                else if (drawMode == DrawMode.DRAW_ERASE) {
+                    path.lineTo(recMoveX, recMoveY);
+                    drawCanvas.drawPath(path, paint);
+                    path.reset();
+                    path.moveTo(recPivotX, recPivotY);
                 }
                 else if (drawMode == DrawMode.DRAW_RECTANGLE) {
                     drawRectangle();
@@ -156,8 +164,10 @@ public class PaintingView extends View {
 
         if (newTool.equals("line")) {
             drawMode = DrawMode.DRAW_LINE;
+            paint.setXfermode(null);
         } else if (newTool.equals("rectangle")) {
             drawMode = DrawMode.DRAW_RECTANGLE;
+            paint.setXfermode(null);
         } else if (newTool.equals("eraser")) {
             drawMode = DrawMode.DRAW_ERASE;
             setEraser();
@@ -210,7 +220,8 @@ public class PaintingView extends View {
     }
 
     public void setEraser() {
-        if (clear != null)
+        if (clear != null) {
             paint.setXfermode(clear);
+        }
     }
 }
