@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hankyo.jeong.drawingboard.R;
@@ -34,9 +35,9 @@ public class PaintingToolElementAdapter extends RecyclerView.Adapter<PaintingToo
     public void onBindViewHolder(PaintingToolElementAdapter.ViewHolder holder, int position) {
         String item = itemList.get(position);
 
-        holder.textview.setText(item);
-        holder.textview.setTag(item);
-        holder.textview.setOnClickListener(onClickItem);
+//        holder.textview.setText(item);
+//        holder.textview.setTag(item);
+        holder.imgBtn.setOnClickListener(onClickItem);
     }
 
     @Override
@@ -46,12 +47,12 @@ public class PaintingToolElementAdapter extends RecyclerView.Adapter<PaintingToo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView textview;
+        public ImageButton imgBtn;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            textview = itemView.findViewById(R.id.item_textview);
+            imgBtn = itemView.findViewById(R.id.painting_item_btn);
         }
     }
 }

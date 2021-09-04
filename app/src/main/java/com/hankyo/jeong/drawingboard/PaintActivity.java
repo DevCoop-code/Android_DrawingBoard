@@ -1,60 +1,50 @@
 package com.hankyo.jeong.drawingboard;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.hankyo.jeong.drawingboard.databinding.ActivityMainBinding;
+import com.hankyo.jeong.drawingboard.databinding.PaintingMainBinding;
 import com.hankyo.jeong.drawingboard.utils.DialogCallback;
 import com.hankyo.jeong.drawingboard.utils.Utils;
 import com.hankyo.jeong.drawingboard.views.ImageResizeView;
-import com.hankyo.jeong.drawingboard.views.PaintingToolElementAdapter;
-import com.hankyo.jeong.drawingboard.views.PaintingToolListDecoration;
 import com.hankyo.jeong.drawingboard.views.PaintingView;
 
-import java.util.ArrayList;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
-
-    private static final String TAG = "MainActivity";
+public class PaintActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
+    private static final String TAG = "PaintActivity";
 
     private static final int PERMISSIONS_REQUEST_CODE = 1000;
     String[] PERMISSIONS = {"android.permission.READ_EXTERNAL_STORAGE"};
 
-    private ActivityMainBinding binding;
+    private PaintingMainBinding binding;
 
     private PaintingView paintingView;
-    private ImageButton currPaint;
-    private ImageButton currTool;
+
+    private ImageButton doPaintColorBtn;
+    private ImageButton doPaintToolBtn;
 
     ActivityResultLauncher<Intent> requestActivity;
 
@@ -64,68 +54,32 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     float drawX = 0, drawY = 0;
     View targetImageView;
 
-    private RecyclerView listview;
-    private PaintingToolElementAdapter adapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = PaintingMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Set RecyclerView
-        listview = binding.mainListview;
-        LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false);
-        listview.setLayoutManager(layoutManager);
-        ArrayList<String> itemList = new ArrayList<>();
-        itemList.add("0");
-        itemList.add("1");
-        itemList.add("2");
-        itemList.add("3");
-        itemList.add("4");
-        itemList.add("5");
-        itemList.add("6");
-        itemList.add("7");
-        itemList.add("8");
-        itemList.add("9");
-        itemList.add("10");
-        itemList.add("11");
-        itemList.add("12");
-        itemList.add("13");
-        itemList.add("14");
-        adapter = new PaintingToolElementAdapter(MainActivity.this, itemList, null);
-        listview.setAdapter(adapter);
+        // Set UI Components
+        setUI();
 
-        PaintingToolListDecoration decoration = new PaintingToolListDecoration();
-        listview.addItemDecoration(decoration);
-
-
-        paintingView = binding.paintView;
-        LinearLayout colorPalletteLayout = binding.colorPallette;
-        currPaint = (ImageButton) colorPalletteLayout.getChildAt(0);
-
+        // Set ActivityResult Callback - For Photo Gallery
         requestActivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    String phototImgPath = getImagePathFromURI(result.getData().getData());
+                    String photoImgPath = getImagePathFromURI(result.getData().getData());
 
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inSampleSize = 4;
-                    Bitmap photoBitmap = BitmapFactory.decodeFile(phototImgPath, options);
+                    Bitmap photoBitmap = BitmapFactory.decodeFile(photoImgPath, options);
 
-//                    paintingView.drawPhotoImage(photoBitmap);
-                    /*
-                     Make ImageResizeView Dynamically
-                     */
                     ImageResizeView imageResizeView = new ImageResizeView(getApplicationContext());
                     imageResizeView.setTargetImage(photoBitmap);
                     imageResizeView.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View view, MotionEvent motionEvent) {
-//                            int width = ((ViewGroup)view.getParent()).getWidth() - view.getWidth();
-//                            int height = ((ViewGroup)view.getParent()).getHeight() - view.getHeight();
                             targetImageView = view.findViewById(R.id.targetImage);
                             int deltaX = (view.getWidth() - targetImageView.getWidth()) / 2;
                             int deltaY = (view.getHeight() - targetImageView.getHeight()) / 2;
@@ -139,8 +93,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                     break;
 
                                 case MotionEvent.ACTION_MOVE:
-//                                    view.setX(motionEvent.getRawX() - oldXvalue);
-//                                    view.setY(motionEvent.getRawY() - (oldYvalue + view.getHeight()));
                                     targetX = motionEvent.getRawX() - deltaX - (targetImageView.getWidth() / 2);
                                     targetY = motionEvent.getRawY() - deltaY - (targetImageView.getHeight() / 2);
 
@@ -152,47 +104,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                     break;
 
                                 case MotionEvent.ACTION_UP:
-//                                    if (view.getX() > width && view.getY() > height) {
-//                                        view.setX(width);
-//                                        view.setY(height);
-//                                    } else if (view.getX() < 0 && view.getY() > height) {
-//                                        view.setX(0);
-//                                        view.setY(height);
-//                                    } else if (view.getX() > width && view.getY() < 0) {
-//                                        view.setX(width);
-//                                        view.setY(0);
-//                                    } else if (view.getX() < 0 && view.getY() < 0) {
-//                                        view.setX(0);
-//                                        view.setY(0);
-//                                    } else if (view.getX() < 0 || view.getX() > width) {
-//                                        if (view.getX() < 0) {
-//                                            view.setX(0);
-//                                            view.setY(motionEvent.getRawY() - oldYvalue - view.getHeight());
-//                                        } else {
-//                                            view.setX(width);
-//                                            view.setY(motionEvent.getRawY() - oldYvalue - view.getHeight());
-//                                        }
-//                                    } else if (view.getY() < 0 || view.getY() > height) {
-//                                        if (view.getY() < 0) {
-//                                            view.setX(motionEvent.getRawX() - oldXvalue);
-//                                            view.setY(0);
-//                                        } else {
-//                                            view.setX(motionEvent.getRawX() - oldXvalue);
-//                                            view.setY(height);
-//                                        }
-//                                    }
+
                                     break;
                             }
-
                             return true;
                         }
                     });
-//                    imageResizeView.okBtn.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            paintingView.drawPhotoImage(photoBitmap, targetX, targetY);
-//                        }
-//                    });
 
                     imageResizeView.cancelBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -203,43 +120,28 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                             imageResizeView.setVisibility(View.INVISIBLE);
                         }
                     });
+
                     binding.paintingArea.addView(imageResizeView);
                 }
             }
         });
     }
 
-    private String getImagePathFromURI(Uri contentUri) {
-        String[] proj = {MediaStore.Images.Media.DATA};
-
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        if (cursor == null)
-            return contentUri.getPath();
-        else {
-            int idx = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            String imgPath = cursor.getString(idx);
-            cursor.close();
-
-            return imgPath;
-        }
-    }
-
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         switch (requestCode) {
             case PERMISSIONS_REQUEST_CODE:
                 if (grantResults.length > 0) {
                     boolean externalStoragePermissionAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    if (!externalStoragePermissionAccepted)         // Not Accepted
-                    {
+                    if (!externalStoragePermissionAccepted) {       // Not Accepted
                         DialogCallback callback = new DialogCallback() {
                             @Override
                             public void willDoAcceptCallback() {
-                                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
+                                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                                     requestPermissions(PERMISSIONS, PERMISSIONS_REQUEST_CODE);
+                                }
                             }
 
                             @Override
@@ -255,13 +157,44 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         String alertNeedMsg = getResources().getString(R.string.permissionNeedMsg);
 
                         Utils.showDialogForPermission(this, alertTitleMsg, alertYesMsg, alertNoMsg, alertNeedMsg, callback);
-
-                    } else {                                        // Accepted
+                    } else {        // Accepted
                         getPhotoData();
                     }
                 }
                 break;
         }
+    }
+
+    /*
+    Set UI Components
+     */
+    private void setUI() {
+        if (binding != null) {
+            paintingView = binding.paintView;
+        }
+    }
+
+    private String getImagePathFromURI(Uri contentUri) {
+        String[] proj = {MediaStore.Images.Media.DATA};
+
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        if (cursor == null) {
+            return contentUri.getPath();
+        } else {
+            int idx = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            String imgPath = cursor.getString(idx);
+            cursor.close();
+
+            return imgPath;
+        }
+    }
+
+    private void getPhotoData() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        requestActivity.launch(intent);
     }
 
     private boolean hasPermissions(String[] permissions) {
@@ -275,29 +208,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return true;
     }
 
-    private void getPhotoData() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-        intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        requestActivity.launch(intent);
-    }
-
     /*
-    External APIs
+    Open API
      */
     public void changeColor(View view) {
-        if (view != currPaint) {
+        if (view != doPaintColorBtn) {
             String color = view.getTag().toString();
             paintingView.setColor(color);
-            currPaint = (ImageButton) view;
+            doPaintColorBtn = (ImageButton) view;
         }
     }
 
     public void changeTool(View view) {
-        if (view != currTool) {
+        if (view != doPaintToolBtn) {
             String tool = view.getTag().toString();
             paintingView.setTool(tool);
-            currTool = (ImageButton) view;
+            doPaintToolBtn = (ImageButton) view;
         }
     }
 
