@@ -21,7 +21,11 @@ import com.hankyo.jeong.drawingboard.databinding.PaintingMainBinding;
 import com.hankyo.jeong.drawingboard.utils.DialogCallback;
 import com.hankyo.jeong.drawingboard.utils.Utils;
 import com.hankyo.jeong.drawingboard.views.ImageResizeView;
+import com.hankyo.jeong.drawingboard.views.PaintingToolElementAdapter;
+import com.hankyo.jeong.drawingboard.views.PaintingToolListDecoration;
 import com.hankyo.jeong.drawingboard.views.PaintingView;
+
+import java.util.ArrayList;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -32,6 +36,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class PaintActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String TAG = "PaintActivity";
@@ -52,7 +58,12 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
     float oldXvalue, oldYvalue;
     float targetX = 0, targetY = 0;
     float drawX = 0, drawY = 0;
+    int deltaX = 0, deltaY = 0;
     View targetImageView;
+
+    // RecyclerView For Color Component
+    private RecyclerView listview;
+    private PaintingToolElementAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +74,9 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
 
         // Set UI Components
         setUI();
+
+        // Set Color Pallette Components
+        setColorPalletteListView();
 
         // Set ActivityResult Callback - For Photo Gallery
         requestActivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
@@ -80,12 +94,13 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
                     imageResizeView.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View view, MotionEvent motionEvent) {
-                            targetImageView = view.findViewById(R.id.targetImage);
-                            int deltaX = (view.getWidth() - targetImageView.getWidth()) / 2;
-                            int deltaY = (view.getHeight() - targetImageView.getHeight()) / 2;
 
                             switch (motionEvent.getAction()) {
                                 case MotionEvent.ACTION_DOWN:
+                                    targetImageView = view.findViewById(R.id.targetImage);
+                                    deltaX = ((view.getWidth() - targetImageView.getWidth()) / 2);
+                                    deltaY = (view.getHeight() - targetImageView.getHeight()) / 2;
+
                                     oldXvalue = motionEvent.getX();
                                     oldYvalue = motionEvent.getY();
 
@@ -96,14 +111,13 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
                                     targetX = motionEvent.getRawX() - deltaX - (targetImageView.getWidth() / 2);
                                     targetY = motionEvent.getRawY() - deltaY - (targetImageView.getHeight() / 2);
 
-                                    drawX = motionEvent.getRawX() - (targetImageView.getWidth() / 2);
-                                    drawY = motionEvent.getRawY() - (targetImageView.getHeight() / 2);
-
                                     view.setX(targetX);
                                     view.setY(targetY);
                                     break;
 
                                 case MotionEvent.ACTION_UP:
+                                    drawX = motionEvent.getRawX() - (targetImageView.getWidth() / 2);
+                                    drawY = motionEvent.getRawY() - (targetImageView.getHeight() / 2);
 
                                     break;
                             }
@@ -171,6 +185,35 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
     private void setUI() {
         if (binding != null) {
             paintingView = binding.paintView;
+            listview = binding.colorListview;
+        }
+    }
+
+    private void setColorPalletteListView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(PaintActivity.this, LinearLayoutManager.VERTICAL, false);
+        if (listview != null) {
+            listview.setLayoutManager(layoutManager);
+            ArrayList<String> itemList = new ArrayList<>();
+            itemList.add("0");
+            itemList.add("1");
+            itemList.add("2");
+            itemList.add("3");
+            itemList.add("4");
+            itemList.add("5");
+            itemList.add("6");
+            itemList.add("7");
+            itemList.add("8");
+            itemList.add("9");
+            itemList.add("10");
+            itemList.add("11");
+            itemList.add("12");
+            itemList.add("13");
+            itemList.add("14");
+            adapter = new PaintingToolElementAdapter(PaintActivity.this, itemList, null);
+            listview.setAdapter(adapter);
+
+            PaintingToolListDecoration decoration = new PaintingToolListDecoration();
+            listview.addItemDecoration(decoration);
         }
     }
 

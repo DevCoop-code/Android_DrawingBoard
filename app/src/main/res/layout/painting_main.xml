@@ -10,6 +10,7 @@
         android:orientation="horizontal">
         <!-- Layout System Buttons -->
         <LinearLayout
+            android:id="@+id/leftLayout"
             android:layout_width="70dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -120,8 +121,13 @@
             android:layout_width="70dp"
             android:layout_height="match_parent"
             android:background="@color/gray"
+            android:padding="10dp"
             android:orientation="vertical">
-
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/color_listview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"/>
         </LinearLayout>
     </LinearLayout>
 

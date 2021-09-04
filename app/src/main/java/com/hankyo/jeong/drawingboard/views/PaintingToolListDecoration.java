@@ -12,7 +12,7 @@ public class PaintingToolListDecoration extends RecyclerView.ItemDecoration {
         super.getItemOffsets(outRect, view, parent, state);
 
         if (parent.getChildAdapterPosition(view) != parent.getAdapter().getItemCount() - 1) {
-            outRect.right = 10;
+            outRect.bottom = 10;
         }
     }
 }
