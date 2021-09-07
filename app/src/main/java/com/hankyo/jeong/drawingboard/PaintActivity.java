@@ -97,7 +97,7 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
                     Bitmap photoBitmap = BitmapFactory.decodeFile(photoImgPath, options);
 
                     ImageResizeView imageResizeView = new ImageResizeView(getApplicationContext());
-                    imageResizeView.setTargetImage(photoBitmap);
+                    imageResizeView.setTargetImage(photoBitmap, paintingView.getWidth(), paintingView.getHeight());
                     imageResizeView.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View view, MotionEvent motionEvent) {
