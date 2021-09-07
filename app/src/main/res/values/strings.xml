@@ -7,4 +7,8 @@
     <string name="permissionNoMsg">NO</string>
     <string name="permissionWarningMsg">You should allow the External Storage</string>
     <string name="permissionNeedMsg">We need External Storage Permission for Executing</string>
+    
+    <!-- Save Message -->
+    <string name="successSaveGalleryMsg">Saved the Image File to Gallery</string>
+    <string name="failSaveGalleryMsg">Fail to Save the Image File to Gallery</string>
 </resources>

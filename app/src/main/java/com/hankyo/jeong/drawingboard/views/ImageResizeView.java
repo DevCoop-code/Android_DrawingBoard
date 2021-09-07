@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import com.hankyo.jeong.drawingboard.R;
 import com.hankyo.jeong.drawingboard.databinding.ImageResizeViewBinding;
 
 public class ImageResizeView extends RelativeLayout {
+
+    private static final String TAG = "ImageResizeView";
 
     RelativeLayout rootLayout;
     public ImageView targetImage;
@@ -55,5 +58,32 @@ public class ImageResizeView extends RelativeLayout {
     public void setTargetImage(Bitmap targetBitmap) {
         BitmapDrawable targetBitDrawable = new BitmapDrawable(getResources(), targetBitmap);
         targetImage.setBackground(targetBitDrawable);
+    }
+
+    public void setTargetImage(Bitmap targetBitmap, int parentWidth, int parentHeight) {
+//        Log.d(TAG, "Parent W, H" + parentWidth + ", " + parentHeight);
+
+        float changedTargetWidth = 0, changedTargetHeight = 0;
+
+        int targetBitmapWidth = targetBitmap.getWidth();
+        int targetBitmapHeight = targetBitmap.getHeight();
+
+        // Determining whether it's landscape or portrait
+        if (targetBitmapWidth > targetBitmapHeight) {         // LandScape
+            changedTargetWidth = parentWidth / 2;
+            float ratio = changedTargetWidth / targetBitmapWidth;
+            changedTargetHeight = targetBitmapHeight * ratio;
+        } else {         // Portrait
+            changedTargetHeight = parentHeight / 2;
+            float ratio = changedTargetHeight / targetBitmapHeight;
+            changedTargetWidth = targetBitmapWidth * ratio;
+        }
+
+        if (changedTargetWidth != 0 && changedTargetHeight != 0) {
+            targetImage.getLayoutParams().width = (int)changedTargetWidth;
+            targetImage.getLayoutParams().height = (int)changedTargetHeight;
+        }
+
+        setTargetImage(targetBitmap);
     }
 }

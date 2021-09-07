@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.hankyo.jeong.drawingboard.databinding.PaintingMainBinding;
@@ -35,6 +37,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -56,6 +59,8 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
 
     private ImageButton doPaintColorBtn;
     private ImageButton doPaintToolBtn;
+
+    private AppCompatSeekBar seekbar;
 
     ActivityResultLauncher<Intent> requestActivity;
 
@@ -97,7 +102,7 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
                     Bitmap photoBitmap = BitmapFactory.decodeFile(photoImgPath, options);
 
                     ImageResizeView imageResizeView = new ImageResizeView(getApplicationContext());
-                    imageResizeView.setTargetImage(photoBitmap);
+                    imageResizeView.setTargetImage(photoBitmap, paintingView.getWidth(), paintingView.getHeight());
                     imageResizeView.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -144,6 +149,23 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
 
                     binding.paintingArea.addView(imageResizeView);
                 }
+            }
+        });
+
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                Log.d(TAG, "Progress: " + seekBar.getProgress());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                paintingView.setPaintStroke(seekBar.getProgress());
             }
         });
     }
@@ -200,6 +222,7 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
         if (binding != null) {
             paintingView = binding.paintView;
             listview = binding.colorListview;
+            seekbar = binding.paintStrokeSlider;
         }
     }
 
@@ -223,10 +246,14 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
             colorItemList.add("#FF7F50");       // Coral
             colorItemList.add("#6495ED");       // CornflowerBlue
             colorItemList.add("#FFF8DC");       // Cornsilk
+            colorItemList.add("#FFD700");       // Gold
+            colorItemList.add("#008000");       // Green
+            colorItemList.add("#ADFF2F");       // Green Yellow
             adapter = new PaintingToolElementAdapter(PaintActivity.this, colorItemList, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    int index = ((ViewGroup)view.getParent()).indexOfChild(view);
+                    MediaPlayer.create(getApplicationContext(), R.raw.buttonclick).start();
+
                     int index = (int)view.getTag();
                     paintingView.setColor(colorItemList.get(index));
                 }
@@ -284,6 +311,8 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
     }
 
     public void changeTool(View view) {
+        MediaPlayer.create(this, R.raw.buttonclick).start();
+
         if (view != doPaintToolBtn) {
             String tool = view.getTag().toString();
             paintingView.setTool(tool);
@@ -292,6 +321,8 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
     }
 
     public void getPhotoData(View view) {
+        MediaPlayer.create(this, R.raw.buttonclick).start();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!hasPermissions(PERMISSIONS)) {                     // Permission Not Granted
                 externalStoreMode = ExternalStorageMode.READ;
@@ -306,15 +337,21 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
 
     public void undoDrawing(View view) {
         Log.d(TAG, "undo Drawing");
+        MediaPlayer.create(this, R.raw.buttonclick).start();
+
         paintingView.undoDrawing();
     }
 
     public void redoDrawing(View view) {
         Log.d(TAG, "redo Drawing");
+        MediaPlayer.create(this, R.raw.buttonclick).start();
+
         paintingView.redoDrawing();
     }
 
     public void saveImage(View view) {
+        MediaPlayer.create(this, R.raw.buttonclick).start();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!hasPermissions(PERMISSIONS)) {                     // Permission Not Granted
                 externalStoreMode = ExternalStorageMode.WRITE;
