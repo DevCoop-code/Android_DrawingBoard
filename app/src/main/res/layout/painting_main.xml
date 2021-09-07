@@ -107,6 +107,12 @@
 <!--                    android:layout_height="50dp"-->
 <!--                    android:background="@drawable/icons_painting"-->
 <!--                    android:padding="10dp" />-->
+                <androidx.appcompat.widget.AppCompatSeekBar
+                    android:id="@+id/paintStrokeSlider"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:max="50"
+                    android:progress="10"/>
             </LinearLayout>
         </LinearLayout>
 

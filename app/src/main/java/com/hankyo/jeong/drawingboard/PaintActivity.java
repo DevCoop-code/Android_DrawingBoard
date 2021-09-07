@@ -17,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.hankyo.jeong.drawingboard.databinding.PaintingMainBinding;
@@ -36,6 +37,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -57,6 +59,8 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
 
     private ImageButton doPaintColorBtn;
     private ImageButton doPaintToolBtn;
+
+    private AppCompatSeekBar seekbar;
 
     ActivityResultLauncher<Intent> requestActivity;
 
@@ -147,6 +151,23 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
                 }
             }
         });
+
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                Log.d(TAG, "Progress: " + seekBar.getProgress());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                paintingView.setPaintStroke(seekBar.getProgress());
+            }
+        });
     }
 
     @Override
@@ -201,6 +222,7 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
         if (binding != null) {
             paintingView = binding.paintView;
             listview = binding.colorListview;
+            seekbar = binding.paintStrokeSlider;
         }
     }
 

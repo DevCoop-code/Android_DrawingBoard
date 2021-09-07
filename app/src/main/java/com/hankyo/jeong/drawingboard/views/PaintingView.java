@@ -138,7 +138,7 @@ public class PaintingView extends View {
                 path.reset();
 
                 // Save the Before Status for undo, redo
-                // -_-: Occure Out Of Memory
+                // -_-: Occure Out Of Memory (Some of Device has occured, Galaxy Note 4)
                 canvasBitmapCount++;
                 if (canvasBitmapCount > 0) {
                     Bitmap intermediateMap = canvasBitmap.copy(canvasBitmap.getConfig(), true);
@@ -250,6 +250,10 @@ public class PaintingView extends View {
 //            paint.setXfermode(clear);
             paint.setColor(Color.WHITE);
         }
+    }
+
+    public void setPaintStroke(int thickness) {
+        paint.setStrokeWidth((float)thickness);
     }
 
     public void saveBitmapImage() {
