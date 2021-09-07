@@ -20,6 +20,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.hankyo.jeong.drawingboard.R;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -275,10 +277,12 @@ public class PaintingView extends View {
                 fos = new FileOutputStream(image);
             }
 
+            String successSaveMessage = getResources().getString(R.string.successSaveGalleryMsg);
+            String failSaveMessage = getResources().getString(R.string.failSaveGalleryMsg);
             if (canvasBitmap.compress(Bitmap.CompressFormat.JPEG, 40, fos)) {
-                Toast.makeText(mContext, "Saved the Image File to Gallery", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, successSaveMessage, Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(mContext, "Fail to Save the Image File to Gallery", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, failSaveMessage, Toast.LENGTH_LONG).show();
             }
 
             fos.flush();
