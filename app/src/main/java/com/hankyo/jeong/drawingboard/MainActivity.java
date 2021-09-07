@@ -9,6 +9,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -19,11 +21,14 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -31,7 +36,12 @@ import android.widget.Toast;
 import com.hankyo.jeong.drawingboard.databinding.ActivityMainBinding;
 import com.hankyo.jeong.drawingboard.utils.DialogCallback;
 import com.hankyo.jeong.drawingboard.utils.Utils;
+import com.hankyo.jeong.drawingboard.views.ImageResizeView;
+import com.hankyo.jeong.drawingboard.views.PaintingToolElementAdapter;
+import com.hankyo.jeong.drawingboard.views.PaintingToolListDecoration;
 import com.hankyo.jeong.drawingboard.views.PaintingView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -48,12 +58,48 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     ActivityResultLauncher<Intent> requestActivity;
 
+    // ImagePhoto Move Value
+    float oldXvalue, oldYvalue;
+    float targetX = 0, targetY = 0;
+    float drawX = 0, drawY = 0;
+    View targetImageView;
+
+    private RecyclerView listview;
+    private PaintingToolElementAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Set RecyclerView
+        listview = binding.mainListview;
+        LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false);
+        listview.setLayoutManager(layoutManager);
+        ArrayList<String> itemList = new ArrayList<>();
+        itemList.add("0xFF000000");
+        itemList.add("0xFFFFFFFF");
+        itemList.add("0xFFED1C24");
+//        itemList.add("3");
+//        itemList.add("4");
+//        itemList.add("5");
+//        itemList.add("6");
+//        itemList.add("7");
+//        itemList.add("8");
+//        itemList.add("9");
+//        itemList.add("10");
+//        itemList.add("11");
+//        itemList.add("12");
+//        itemList.add("13");
+//        itemList.add("14");
+        adapter = new PaintingToolElementAdapter(MainActivity.this, itemList, null);
+        listview.setAdapter(adapter);
+
+        PaintingToolListDecoration decoration = new PaintingToolListDecoration();
+        listview.addItemDecoration(decoration);
+
 
         paintingView = binding.paintView;
         LinearLayout colorPalletteLayout = binding.colorPallette;
@@ -68,6 +114,96 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inSampleSize = 4;
                     Bitmap photoBitmap = BitmapFactory.decodeFile(phototImgPath, options);
+
+//                    paintingView.drawPhotoImage(photoBitmap);
+                    /*
+                     Make ImageResizeView Dynamically
+                     */
+                    ImageResizeView imageResizeView = new ImageResizeView(getApplicationContext());
+                    imageResizeView.setTargetImage(photoBitmap);
+                    imageResizeView.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+//                            int width = ((ViewGroup)view.getParent()).getWidth() - view.getWidth();
+//                            int height = ((ViewGroup)view.getParent()).getHeight() - view.getHeight();
+                            targetImageView = view.findViewById(R.id.targetImage);
+                            int deltaX = (view.getWidth() - targetImageView.getWidth()) / 2;
+                            int deltaY = (view.getHeight() - targetImageView.getHeight()) / 2;
+
+                            switch (motionEvent.getAction()) {
+                                case MotionEvent.ACTION_DOWN:
+                                    oldXvalue = motionEvent.getX();
+                                    oldYvalue = motionEvent.getY();
+
+                                    Log.d(TAG, "old Value X: " + oldXvalue + ", Y: " + oldYvalue);
+                                    break;
+
+                                case MotionEvent.ACTION_MOVE:
+//                                    view.setX(motionEvent.getRawX() - oldXvalue);
+//                                    view.setY(motionEvent.getRawY() - (oldYvalue + view.getHeight()));
+                                    targetX = motionEvent.getRawX() - deltaX - (targetImageView.getWidth() / 2);
+                                    targetY = motionEvent.getRawY() - deltaY - (targetImageView.getHeight() / 2);
+
+                                    drawX = motionEvent.getRawX() - (targetImageView.getWidth() / 2);
+                                    drawY = motionEvent.getRawY() - (targetImageView.getHeight() / 2);
+
+                                    view.setX(targetX);
+                                    view.setY(targetY);
+                                    break;
+
+                                case MotionEvent.ACTION_UP:
+//                                    if (view.getX() > width && view.getY() > height) {
+//                                        view.setX(width);
+//                                        view.setY(height);
+//                                    } else if (view.getX() < 0 && view.getY() > height) {
+//                                        view.setX(0);
+//                                        view.setY(height);
+//                                    } else if (view.getX() > width && view.getY() < 0) {
+//                                        view.setX(width);
+//                                        view.setY(0);
+//                                    } else if (view.getX() < 0 && view.getY() < 0) {
+//                                        view.setX(0);
+//                                        view.setY(0);
+//                                    } else if (view.getX() < 0 || view.getX() > width) {
+//                                        if (view.getX() < 0) {
+//                                            view.setX(0);
+//                                            view.setY(motionEvent.getRawY() - oldYvalue - view.getHeight());
+//                                        } else {
+//                                            view.setX(width);
+//                                            view.setY(motionEvent.getRawY() - oldYvalue - view.getHeight());
+//                                        }
+//                                    } else if (view.getY() < 0 || view.getY() > height) {
+//                                        if (view.getY() < 0) {
+//                                            view.setX(motionEvent.getRawX() - oldXvalue);
+//                                            view.setY(0);
+//                                        } else {
+//                                            view.setX(motionEvent.getRawX() - oldXvalue);
+//                                            view.setY(height);
+//                                        }
+//                                    }
+                                    break;
+                            }
+
+                            return true;
+                        }
+                    });
+//                    imageResizeView.okBtn.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            paintingView.drawPhotoImage(photoBitmap, targetX, targetY);
+//                        }
+//                    });
+
+                    imageResizeView.cancelBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Log.d(TAG, "Draw PaintView: " + drawX + ", " + drawY);
+                            paintingView.drawPhotoImage(photoBitmap, drawX, drawY, targetImageView.getWidth(), targetImageView.getHeight());
+
+                            imageResizeView.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                    binding.paintingArea.addView(imageResizeView);
                 }
             }
         });
@@ -121,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         Utils.showDialogForPermission(this, alertTitleMsg, alertYesMsg, alertNoMsg, alertNeedMsg, callback);
 
                     } else {                                        // Accepted
-
+                        getPhotoData();
                     }
                 }
                 break;
@@ -170,10 +306,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             if (!hasPermissions(PERMISSIONS)) {                     // Permission Not Granted
                 requestPermissions(PERMISSIONS, PERMISSIONS_REQUEST_CODE);
             } else {                                                // Permission Already Granted
-
+                getPhotoData();
             }
         } else {                                                    // Permission Not Necessary
-
+            getPhotoData();
         }
     }
 

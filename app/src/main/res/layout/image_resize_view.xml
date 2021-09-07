@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/imageResizeViewLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/targetImage"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/android_default_icon"/>
+        <ImageButton
+            android:id="@+id/cancelBtn"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_above="@+id/targetImage"
+            android:layout_toRightOf="@+id/targetImage"
+            android:background="@drawable/image_cancel_btn"/>
+<!--        <ImageButton-->
+<!--            android:id="@+id/okBtn"-->
+<!--            android:layout_width="20dp"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:layout_above="@+id/targetImage"-->
+<!--            android:layout_toLeftOf="@+id/targetImage"-->
+<!--            android:background="@drawable/image_ok_btn"/>-->
+
+</RelativeLayout>

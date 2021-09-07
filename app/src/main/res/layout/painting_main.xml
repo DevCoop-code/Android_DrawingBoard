@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pallette">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <!-- Layout System Buttons -->
+        <LinearLayout
+            android:id="@+id/leftLayout"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/pallette">
+            <ImageButton
+                android:id="@+id/undo_btn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/undo_arrow"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:onClick="undoDrawing"/>
+            <ImageButton
+                android:id="@+id/redo_btn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/redo_arrow"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:onClick="redoDrawing"/>
+            <ImageButton
+                android:id="@+id/save_btn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/icons_save"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:onClick="saveImage"/>
+        </LinearLayout>
+
+        <!-- Layout PaintingBoard & Tools -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <FrameLayout
+                android:id="@+id/paintingArea"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+                <com.hankyo.jeong.drawingboard.views.PaintingView
+                    android:id="@+id/paintView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:layout_margin="10dp"
+                android:background="@color/pallette">
+                <ImageButton
+                    android:id="@+id/pencilTool_btn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/icons_pencil"
+                    android:padding="10dp"
+                    android:layout_marginRight="10dp"
+                    android:onClick="changeTool"
+                    android:tag="line"/>
+                <ImageButton
+                    android:id="@+id/eraserTool_btn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/icons_eraser"
+                    android:padding="10dp"
+                    android:layout_marginRight="10dp"
+                    android:onClick="changeTool"
+                    android:tag="eraser"/>
+                <ImageButton
+                    android:id="@+id/rectangleTool_btn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/icons_rectangle"
+                    android:padding="10dp"
+                    android:layout_marginRight="10dp"
+                    android:onClick="changeTool"
+                    android:tag="rectangle"/>
+                <ImageButton
+                    android:id="@+id/photoTool_btn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@android:drawable/ic_menu_camera"
+                    android:padding="10dp"
+                    android:layout_marginRight="10dp"
+                    android:onClick="getPhotoData"/>
+                <ImageButton
+                    android:id="@+id/palletteTool_btn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/icons_painting"
+                    android:padding="10dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Layout Used Color Buttons -->
+        <LinearLayout
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:background="@color/pallette"
+            android:padding="10dp"
+            android:orientation="vertical">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/color_listview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,13 +11,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <FrameLayout
+            android:id="@+id/paintingArea"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="3dp"
+            android:layout_weight="1">
+            <com.hankyo.jeong.drawingboard.views.PaintingView
+                android:id="@+id/paintView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FFFFFFFF"/>
+        </FrameLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal">
             <ImageButton
-                android:layout_margin="5dp"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:background="@android:drawable/ic_menu_camera"
@@ -35,16 +50,6 @@
                 android:background="@drawable/redo_arrow"
                 android:onClick="redoDrawing"/>
         </LinearLayout>
-        <com.hankyo.jeong.drawingboard.views.PaintingView
-            android:id="@+id/paintView"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="3dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="3dp"
-            android:layout_weight="1"
-            android:background="#FFFFFFFF"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -129,8 +134,13 @@
                     android:onClick="changeColor"
                     android:tag="#FFFFFFFF"/>
             </LinearLayout>
-
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/main_listview"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:scrollbars="horizontal"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
