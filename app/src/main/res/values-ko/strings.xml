@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">그림판</string>
+    <string name="app_name">그림판 M</string>
 
     <!-- Dialog -->
     <string name="permissionTitleMsg">필수허가 요청</string>
