@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -284,6 +285,8 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
     }
 
     public void changeTool(View view) {
+        MediaPlayer.create(this, R.raw.buttonclick).start();
+
         if (view != doPaintToolBtn) {
             String tool = view.getTag().toString();
             paintingView.setTool(tool);
@@ -292,6 +295,8 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
     }
 
     public void getPhotoData(View view) {
+        MediaPlayer.create(this, R.raw.buttonclick).start();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!hasPermissions(PERMISSIONS)) {                     // Permission Not Granted
                 externalStoreMode = ExternalStorageMode.READ;
@@ -306,15 +311,21 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
 
     public void undoDrawing(View view) {
         Log.d(TAG, "undo Drawing");
+        MediaPlayer.create(this, R.raw.buttonclick).start();
+
         paintingView.undoDrawing();
     }
 
     public void redoDrawing(View view) {
         Log.d(TAG, "redo Drawing");
+        MediaPlayer.create(this, R.raw.buttonclick).start();
+
         paintingView.redoDrawing();
     }
 
     public void saveImage(View view) {
+        MediaPlayer.create(this, R.raw.buttonclick).start();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!hasPermissions(PERMISSIONS)) {                     // Permission Not Granted
                 externalStoreMode = ExternalStorageMode.WRITE;
