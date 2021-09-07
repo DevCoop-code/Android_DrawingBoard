@@ -246,6 +246,9 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
             colorItemList.add("#FF7F50");       // Coral
             colorItemList.add("#6495ED");       // CornflowerBlue
             colorItemList.add("#FFF8DC");       // Cornsilk
+            colorItemList.add("#FFD700");       // Gold
+            colorItemList.add("#008000");       // Green
+            colorItemList.add("#ADFF2F");       // Green Yellow
             adapter = new PaintingToolElementAdapter(PaintActivity.this, colorItemList, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
