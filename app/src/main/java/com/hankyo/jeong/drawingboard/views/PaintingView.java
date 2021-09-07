@@ -140,17 +140,17 @@ public class PaintingView extends View {
                 // Save the Before Status for undo, redo
                 // -_-: Occure Out Of Memory
                 canvasBitmapCount++;
-//                if (canvasBitmapCount > 0) {
-//                    Bitmap intermediateMap = canvasBitmap.copy(canvasBitmap.getConfig(), true);
-//                    if (canvasBitmapCount < canvasBitmapList.size()) {
-//                        Log.d(TAG, "bitmap SET count: " + canvasBitmapCount);
-//                        canvasBitmapList.set(canvasBitmapCount, intermediateMap);
-//                    }
-//                    else {
-//                        Log.d(TAG, "bitmap ADD count: " + canvasBitmapCount);
-//                        canvasBitmapList.add(intermediateMap);
-//                    }
-//                }
+                if (canvasBitmapCount > 0) {
+                    Bitmap intermediateMap = canvasBitmap.copy(canvasBitmap.getConfig(), true);
+                    if (canvasBitmapCount < canvasBitmapList.size()) {
+                        Log.d(TAG, "bitmap SET count: " + canvasBitmapCount);
+                        canvasBitmapList.set(canvasBitmapCount, intermediateMap);
+                    }
+                    else {
+                        Log.d(TAG, "bitmap ADD count: " + canvasBitmapCount);
+                        canvasBitmapList.add(intermediateMap);
+                    }
+                }
                 break;
             default:
                 return false;

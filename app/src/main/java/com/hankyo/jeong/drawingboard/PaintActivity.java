@@ -227,7 +227,8 @@ public class PaintActivity extends AppCompatActivity implements ActivityCompat.O
             adapter = new PaintingToolElementAdapter(PaintActivity.this, colorItemList, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    int index = ((ViewGroup)view.getParent()).indexOfChild(view);
+                    MediaPlayer.create(getApplicationContext(), R.raw.buttonclick).start();
+
                     int index = (int)view.getTag();
                     paintingView.setColor(colorItemList.get(index));
                 }
